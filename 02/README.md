@@ -67,7 +67,7 @@ pwd
 
 ```sh
 touch main.go
-chwon ubuntu:ubuntu main.go
+chown ubuntu:ubuntu main.go
 ```
 
 Go の `cmd.SysProcAttr` には、`clone(2)` に渡すのと同じような flags を渡すことができます。
@@ -341,7 +341,7 @@ Linux には、プロセスのルートディレクトリや、ルートファ�
 mkdir -p /root/chroot/proc
 ```
 
-また、chroot 後の環境でも `sh` と `ls` が利用できるように、`sh`, `ls` 並びに必要な静的ライブラリを設置します。
+また、chroot 後の環境でも `sh` と `ls` が利用できるように、`sh`, `ls` 並びに必要な動的ライブラリを設置します。
 
 ```sh
 mkdir -p /root/chroot/bin
