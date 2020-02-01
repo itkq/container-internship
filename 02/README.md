@@ -131,7 +131,7 @@ User namespace を分離した後では、sh を実行したユーザ/グルー�
 Go の `Cmd.SysProcAttr` には、`CLONE_NEWUSER` した際の `UidMappings`, `GidMappings` を渡すことができ、
 渡した値を `/proc/[pid]/uid_map` 並びに `/proc/[pid]/gid_map` に適切に書き込みを行ってくれるようになっています。
 
-(refs: `https://github.com/golang/go/blob/go1.10.4/src/syscall/exec_linux.go#L438-L516`)
+(refs: `https://github.com/golang/go/blob/go1.13.4/src/syscall/exec_linux.go#L556-L623`)
 
 ここでは、プロセスを実行したユーザが、名前空間を分離した後のプロセスで uid/gid が 0 (root) になるように設定してみましょう。
 
