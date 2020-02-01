@@ -75,7 +75,7 @@ Go の `cmd.SysProcAttr` には、`clone(2)` に渡すのと同じような flag
 
 試しに、IPC, Network, User に対して名前空間を利用するようにしてみます (`Cloneflags` に指定されている値に注目する)。
 
-(refs: `man 2 clone`)
+(refs: `man 2 clone`, `https://github.com/golang/go/blob/go1.13.4/src/syscall/exec_unix.go#L140-L239`)
 
 ```go
 // +build linux
