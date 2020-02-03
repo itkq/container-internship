@@ -49,7 +49,7 @@ func InitContainer() error {
 	if err := syscall.Sethostname([]byte("container")); err != nil {
 		return fmt.Errorf("Setting hostname failed: %w", err)
 	}
-	if err := syscall.Exec("/bin/sh", []string{"/bin/sh"}, os.Environ()); err != nil {
+	if err := syscall.Exec("/bin/bash", []string{"/bin/bash"}, os.Environ()); err != nil {
 		return fmt.Errorf("Exec failed: %w", err)
 	}
 	return nil

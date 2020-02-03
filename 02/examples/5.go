@@ -52,7 +52,7 @@ func InitContainer() error {
 	if err := syscall.Mount("proc", "/proc", "proc", uintptr(syscall.MS_NOEXEC|syscall.MS_NOSUID|syscall.MS_NODEV), ""); err != nil {
 		return fmt.Errorf("Proc mount failed: %w", err)
 	}
-	if err := syscall.Exec("/bin/sh", []string{"/bin/sh"}, os.Environ()); err != nil {
+	if err := syscall.Exec("/bin/bash", []string{"/bin/bash"}, os.Environ()); err != nil {
 		return fmt.Errorf("Exec failed: %w", err)
 	}
 	return nil

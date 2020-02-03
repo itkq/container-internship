@@ -52,7 +52,7 @@ Linux では、プロセスが使うリソースを分離して提供する、Na
 
 ### 名前空間の分離
 
-いくつかに関して、実際に試してみましょう。次のような、`/bin/sh` を起動する際に名前空間を利用する Go のプログラムとして、`main.go` を用意します。
+いくつかに関して、実際に試してみましょう。次のような、`/bin/bash` を起動する際に名前空間を利用する Go のプログラムとして、`main.go` を用意します。
 
 ログインした時点では ubuntu ユーザとなっていますが、ここからの作業は基本的には root ユーザで行うため、ターミナル上では sudo コマンドと su コマンドを使い、root ユーザになりましょう。
 
@@ -89,7 +89,7 @@ import (
 )
 
 func main() {
-	cmd := exec.Command("/bin/sh")
+	cmd := exec.Command("/bin/bash")
 	cmd.SysProcAttr = &syscall.SysProcAttr{
 		Cloneflags: syscall.CLONE_NEWIPC |
 			syscall.CLONE_NEWNET |
@@ -173,9 +173,9 @@ hostname を設定してからプロセスを起動するために、次のよ�
 - プロセスの第一引数が `run` かどうかチェックする
     - `run` であれば Namespaces を設定しつつ第一引数を `init` に変えて自分自身を実行する
 - プロセスの第一引数が `init` かどうかチェックする
-    - `init` であれば hostname を設定した後に自分自身を `/bin/sh` に置き換える
+    - `init` であれば hostname を設定した後に自分自身を `/bin/bash` に置き換える
 
-このようにすることで、Namespaces が設定された後に hostname を設定しつつ `/bin/sh` を実行することができるようになります。
+このようにすることで、Namespaces が設定された後に hostname を設定しつつ `/bin/bash` を実行することができるようになります。
 コードを見たほうが早いと思うので、実際に見てみましょう。
 
 ```go
@@ -228,7 +228,7 @@ func InitContainer() error {
 	if err := syscall.Sethostname([]byte("container")); err != nil {
 		return fmt.Errorf("Setting hostname failed: %w", err)
 	}
-	if err := syscall.Exec("/bin/sh", []string{"/bin/sh"}, os.Environ()); err != nil {
+	if err := syscall.Exec("/bin/bash", []string{"/bin/bash"}, os.Environ()); err != nil {
 		return fmt.Errorf("Exec failed: %w", err)
 	}
 	return nil
@@ -294,7 +294,7 @@ func main() {
 +	if err := syscall.Mount("proc", "/proc", "proc", uintptr(syscall.MS_NOEXEC|syscall.MS_NOSUID|syscall.MS_NODEV), ""); err != nil {
 +		return fmt.Errorf("Proc mount failed: %w", err)
 +	}
- 	if err := syscall.Exec("/bin/sh", []string{"/bin/sh"}, os.Environ()); err != nil {
+ 	if err := syscall.Exec("/bin/bash", []string{"/bin/bash"}, os.Environ()); err != nil {
  		return fmt.Errorf("Exec failed: %w", err)
  	}
 ```
@@ -330,7 +330,7 @@ Linux には、プロセスのルートディレクトリや、ルートファ�
 +	if err := os.Chdir("/"); err != nil {
 +		return fmt.Errorf("Chdir failed: %w", err)
 +	}
- 	if err := syscall.Exec("/bin/sh", []string{"/bin/sh"}, os.Environ()); err != nil {
+ 	if err := syscall.Exec("/bin/bash", []string{"/bin/bash"}, os.Environ()); err != nil {
  		return fmt.Errorf("Exec failed: %w", err)
  	}
 ```
@@ -347,18 +347,19 @@ mkdir -p /root/chroot/proc
 mkdir -p /root/chroot/bin
 mkdir -p /root/chroot/lib
 
-cp /bin/sh /root/chroot/bin
+cp /bin/bash /root/chroot/bin
 cp /bin/ls /root/chroot/bin
 
-ldd /bin/sh
+ldd /bin/bash
 ldd /bin/ls
 
 cp /lib/x86_64-linux-gnu/libc.so.6 /root/chroot/lib
-cp /lib64/ld-linux-x86-64.so.2 /root/chroot/lib
+cp /lib/x86_64-linux-gnu/libtinfo.so.5 /root/chroot/lib
+cp /lib/x86_64-linux-gnu/libdl.so.2 /root/chroot/lib
 cp /lib/x86_64-linux-gnu/libselinux.so.1 /root/chroot/lib
 cp /lib/x86_64-linux-gnu/libpcre.so.3 /root/chroot/lib
-cp /lib/x86_64-linux-gnu/libdl.so.2 /root/chroot/lib
 cp /lib/x86_64-linux-gnu/libpthread.so.0 /root/chroot/lib
+cp /lib64/ld-linux-x86-64.so.2 /root/chroot/lib
 
 cd /root/chroot/
 ln -s lib lib64
@@ -402,7 +403,7 @@ func main() {
 	if err := syscall.Chroot("../../../../../../../../../../../../../../../.."); err != nil {
 		fmt.Println("Jail break failed")
 	}
-	if err := syscall.Exec("/bin/sh", []string{""}, os.Environ()); err != nil {
+	if err := syscall.Exec("/bin/bash", []string{""}, os.Environ()); err != nil {
 		fmt.Println(err)
 		fmt.Println("Exec failed")
 	}
@@ -439,15 +440,16 @@ mkdir -p /root/rootfs/proc
 mkdir -p /root/rootfs/bin
 mkdir -p /root/rootfs/lib
 
-cp /bin/sh /root/rootfs/bin
+cp /bin/bash /root/rootfs/bin
 cp /bin/ls /root/rootfs/bin
 
 cp /lib/x86_64-linux-gnu/libc.so.6 /root/rootfs/lib
-cp /lib64/ld-linux-x86-64.so.2 /root/rootfs/lib
+cp /lib/x86_64-linux-gnu/libtinfo.so.5 /root/rootfs/lib
+cp /lib/x86_64-linux-gnu/libdl.so.2 /root/rootfs/lib
 cp /lib/x86_64-linux-gnu/libselinux.so.1 /root/rootfs/lib
 cp /lib/x86_64-linux-gnu/libpcre.so.3 /root/rootfs/lib
-cp /lib/x86_64-linux-gnu/libdl.so.2 /root/rootfs/lib
 cp /lib/x86_64-linux-gnu/libpthread.so.0 /root/rootfs/lib
+cp /lib64/ld-linux-x86-64.so.2 /root/rootfs/lib
 
 cd /root/rootfs/
 ln -s lib lib64

