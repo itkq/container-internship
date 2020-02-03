@@ -5,18 +5,18 @@
 受け取った秘密鍵は、SSH ログインで利用可能なように、次の操作を行ってください。
 
 ```
-$ chmod 600 id_rsa.handai-internship.pem
-$ mv id_rsa.handai-internship.pem ~/.ssh
+$ chmod 600 internship-titech.pem
+$ mv internship-titech.pem ~/.ssh
 ```
 
 次に、~/.ssh/config に、インスタンスにログインするための設定を追加します。
 
 ```
-Host handai-container-internship
+Host internship-titech
   User ubuntu
   HostName ${インスタンスの IP アドレス}
   Port 22
-  IdentityFile ~/.ssh/id_rsa.handai-internship.pem
+  IdentityFile ~/.ssh/internship-titech.pem
 ```
 
 では、VS Code から接続してみましょう。画面端の remote development のアイコンを探し、SSH TARGETS から、さきほど ~/.ssh/config に追加した handai-container-internship を探し、右クリックして「Connect to Host in Current Window」を選択します。もしくは、右の + マークのついた窓のアイコンをクリックすると、別ウィンドウで開くこともできます。
@@ -34,7 +34,7 @@ Host handai-container-internship
 インスタンス上で Vim を使いたい、エディタは VS Code でいいけれどターミナルは手に馴染んだものを使いたいといったように、ターミナルからログインしたい場合は、
 
 ```
-$ ssh handai-container-internship
+$ ssh internship-titech
 ```
 
 のようにしてください。
